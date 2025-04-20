@@ -80,23 +80,24 @@ def setup():
     global config
     configfile_options = ['-f', '--configfile']
 
-    index = -1
-    for option in configfile_options:
-        try:
-            index = sys.argv.index(option)
-        except:
-            continue
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument(configfile_options[0],
+                        configfile_options[1],
+                        default=default_config_file,
+                        help='Specify alternate config file. '
+                             '(default: %(default)s)')
+    args, remaining_args = parser.parse_known_args()
 
-        break
-
-    if index >= 0:
-        configfile = sys.argv[index+1]
+    if args.configfile:
+        configfile = args.configfile
     else:
-        try:
-            configfile = os.path.expanduser(default_config_file)
-        except Exception as e:
-            print(e)
-            my_exit()
+        configfile = default_config_file
+
+    try:
+        configfile = os.path.expanduser(configfile)
+    except Exception as e:
+        print(e)
+        my_exit()
 
     try:
         config_length = len(config.read(configfile))
@@ -135,6 +136,7 @@ def setup():
             description='Optionally prompt for confirmation and run a command.',
             epilog='\n')
 
+
     parser.add_argument('-c', '--command',
                         choices=list(config['Command'].keys()),
                         required=True)
@@ -147,13 +149,12 @@ def setup():
                         help='Specify alternate config file. '
                              '(default: %(default)s)')
 
-    return parser.parse_args()
+    return parser.parse_args(remaining_args)
 
 
 
 def session_ctrl(args):    
     title = "System Control"
-
     if args.dry_run:
         title += ' - Dry Run'
 
