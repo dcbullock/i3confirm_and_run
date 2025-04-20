@@ -9,11 +9,13 @@ import configparser
 import argparse
 
 
-my_name,ext = os.path.basename(sys.argv[0]).rsplit(os.path.extsep, 1)
-if ext:
+name = os.path.basename(sys.argv[0]).split(os.path.extsep)
+my_name = name[0]
+if len(name) > 1:
     default_config_file = f'./{my_name}.conf'
 else:
     default_config_file = f"~/.config/{my_name}/config"
+
 default_config_data = \
 f"""
 # config file for {my_name}
