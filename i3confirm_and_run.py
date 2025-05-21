@@ -1,5 +1,16 @@
 #!/usr/bin/env python3
 
+# Copyright github.com user dcbullock
+#
+# read a simple config file that specifies messages and commands
+#    default config can be written out if it doesn't already
+#    exist
+#
+# launch a tkinter dialog yes/no dialog and run commands
+#
+# probably shouldn't be named i3... - works for any command
+#
+
 import sys
 import os
 import subprocess
@@ -9,6 +20,9 @@ import configparser
 import argparse
 
 
+# a little hack here for development
+#   if this script is run with a leading path element including ./ ,
+#   then make the default config path the current directory
 name = os.path.basename(sys.argv[0]).split(os.path.extsep)
 my_name = name[0]
 if len(name) > 1:
@@ -16,6 +30,8 @@ if len(name) > 1:
 else:
     default_config_file = f"~/.config/{my_name}/config"
 
+
+# default config file
 default_config_data = \
 f"""
 # config file for {my_name}
@@ -106,6 +122,7 @@ def setup():
     except Exception as e:
         config_length = 0
 
+    # write out the config on error after prompting the user
     if config_length == 0:
         answer = messagebox.askyesno('Config Error' + configfile,
                                              'Error reading config file.\n'
@@ -113,7 +130,6 @@ def setup():
                                              'path: "' + configfile + '"',
                                              default=messagebox.NO)
         if answer:
-            # write out the config on error after prompting the user
             try:
                 configdir = os.path.dirname(configfile)
                 if configdir:
