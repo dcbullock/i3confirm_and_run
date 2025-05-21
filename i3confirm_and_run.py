@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-# Copyright github.com user dcbullock
+# Copyright Dean C. Bullock
+# MIT license, see LICENSE.txt
 #
 # read a simple config file that specifies messages and commands
 #    default config can be written out if it doesn't already
